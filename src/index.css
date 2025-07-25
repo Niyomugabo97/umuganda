@@ -1,0 +1,380 @@
+/* Basic Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Navigation Bar Styling */
+.nav {
+  background-color: #2571b3;
+  color: white;
+  padding: 10px 20px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav ul li {
+  margin: 0 15px;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #1a73e8;
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+}
+
+.right-side {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Footer Styling */
+footer {
+  background-color: #2571b3;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  position:relative;
+  bottom: 0;
+  width: 100%;
+}
+
+/* Responsive Styling */
+@media (max-width: 768px) {
+  .nav ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav ul li {
+    margin: 10px 0;
+  }
+
+  .right-side {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .image-preview {
+    max-width: 100%;
+  }
+
+  .whatsapp, .x-twitter, .facebook, .instagram, .linkedin {
+    font-size: 1.5rem;
+    padding: 8px;
+  }
+
+  .profile-gallery {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .nav {
+    padding: 20px 50px;
+  }
+
+  .nav ul li {
+    font-size: 1.2rem;
+  }
+}
+
+/* Social Media Icons */
+.whatsapp, .x-twitter, .facebook, .instagram, .linkedin {
+  font-size: 2rem;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  text-align: center;
+}
+
+.whatsapp { background-color: #25D366; }
+.whatsapp:hover { background-color: #128C7E; transform: scale(1.1); }
+
+.x-twitter { background-color: #1DA1F2; }
+.x-twitter:hover { background-color: #0d95e8; }
+
+.facebook { background-color: #4267B2; }
+.facebook:hover { background-color: #240f5f; }
+
+.instagram { background-color: #E4405F; }
+.instagram:hover { background-color: #C13584; }
+
+.linkedin { background-color: #2a00b5; }
+.linkedin:hover { background-color: #005C8E; }
+
+/* Profile Gallery */
+.profile-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.profile-preview {
+  width: 100%;
+  text-align: center;
+}
+
+.profile-image {
+  width: 100%;
+  max-width: 150px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styling */
+.form-container, .login-form, .signup-form {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  text-align: center;
+  padding: 40px;
+  margin: 50px auto;
+}
+
+.login-form h2, .signup-form h2 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-form input, .signup-form input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+
+.login-button, .signup-button {
+  background-color: #0a7cc2;
+  color: white;
+  width: 90px;
+  height: 50px;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+}
+
+
+
+/* Admin Dashboard Styles */
+.admin-dashboard {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Logout Button */
+.logout-btn {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.logout-btn:hover {
+  background-color: #c9302c;
+}
+
+/* Upload Section */
+.upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.upload-btn {
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.upload-btn:hover {
+  background-color: #4cae4c;
+}
+
+/* Message */
+.message {
+  font-size: 16px;
+  color: #31708f;
+  margin-bottom: 15px;
+}
+
+/* Image Grid */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 15px;
+  justify-content: center;
+  padding: 10px;
+}
+
+/* Image Card */
+.image-card {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.image-preview {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .image-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .logout-btn, .upload-btn {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+}
+
+.admin-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.logout-btn {
+  background-color: red;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.left-section, .right-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.left-section {
+  background: #f3f3f3;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.right-section {
+  background: #e6e6e6;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.upload-btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.preview-container, .image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.preview-item, .gallery-item {
+  text-align: center;
+  padding: 10px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.preview-img, .gallery-img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  margin-top: 5px;
+}
+
