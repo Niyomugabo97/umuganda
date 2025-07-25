@@ -1,70 +1,50 @@
-# Getting Started with Create React App
+##  About the Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The *Umuganda Attendance & Fines Tracking System (UATS)* is a web-based platform built with React and Supabase that helps communities in Rwanda track participation in monthly Umuganda activities.
 
-## Available Scripts
+This system allows:
+- *Admins* to record attendance and absentees.
+- *Sector officials* to view participation trends and manage fines.
+- *Citizens* to see their attendance history and fines .
 
-In the project directory, you can run:
+## Setup guide
 
-### `npm start`
+- *Citizen* citizen will view his/her infomation through navigation bar called *citizen view* 
+He/she will asked to signup before seeing citizen dashboard, after signup , user will login using email and password
+but he/she will use email created before in gmail and the use it on signup and create passwors.
+- *citizen* citizen will get all informations about attendence/absence related to him/her by entering his/her names 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+*Features overview*:this website contains home pages indicate all activies have done, citizen page indicates all information related to the citizen, local-leader page and sector page control the flow of activities
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
+*Admin & citizen test credentials* you can use this email and password to test the website on citizen view and local leader view: claudeniyomugabo2022@gmail.com, passwords:niyomugabo97
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🌟 Features
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- 👤 *Signup/Login* using Supabase Auth
+-  Register attendees and absentees
+-  Sector Officials dashboard to track participation trends
+-  Fine management for absentees
+-  Supabase for data storage and access control
+-  Role-based views (admin, citizen, sector official)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🔧 Tech Stack
 
-## Learn More
+- *Frontend*: React + Vite
+- *Backend/DB*: Supabase (PostgreSQL)
+- *Styling*:  CSS
+- *Charts*: Recharts showing us the level of performance
+- *Deployment*: GitHub + Vercel 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
+Depoloyed links:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
