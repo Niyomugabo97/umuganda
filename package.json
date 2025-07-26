@@ -58,9 +58,6 @@
     "react-dom": "^19.0.0",
 
 
-    "react-google-login": "^5.2.2",
-
-
     "react-icon": "^1.0.0",
 
 
@@ -70,7 +67,7 @@
     "react-router-dom": "^7.2.0",
 
 
-    "react-scripts": "5.0.1",
+    "react-scripts": "^0.0.0",
 
 
     "recharts": "^3.1.0",
@@ -84,7 +81,9 @@
 
   "scripts": {
 
-      "build": "npm install --legacy-peer-deps && react-scripts build",
+
+    "build": "react-scripts build",
+
 
     "start": "react-scripts start",
 
@@ -95,15 +94,14 @@
     "deploy": "gh-pages -d build",
 
 
-
-
     "test": "react-scripts test",
 
 
     "eject": "react-scripts eject",
 
-    "build": "react-scripts build",
+
     "postinstall": "npm install --legacy-peer-deps"
+
 
   },
 
