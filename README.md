@@ -1,3 +1,4 @@
+
 ##  About the Project
 
 The *Umuganda Attendance & Fines Tracking System (UATS)* is a web-based platform built with React and Supabase that helps communities in Rwanda track participation in monthly Umuganda activities.
@@ -47,4 +48,3 @@ but he/she will use email created before in gmail and the use it on signup and c
 
 ---
 Depoloyed links:
-

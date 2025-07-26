@@ -1,51 +1,38 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Home from "./pages/Home"; // ✅ Import Home Page
+import Home from "./pages/Home";
 import SectorOfficials from "./pages/SectorDashboard";
 import CitizenDashboard from "./pages/CitizenDashboard";
-import AdminDashboard from "./pages/AdminDashboard";
+import LocalLeaderDashboard from "./pages/LocalLeaderDashboard";
 import Navbar from "./components/Navbar";
-import ProtectedRoute from "./components/ProtectedRoute";
+import Join from "./pages/Join";
+import SelectRole from "./pages/SelectRole"; // 💡 added this line
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from "./context/AuthContext";
 import Footer from "./components/Footer";
-function App() {
-  const role = 'citizen'; // You can make this dynamic later
-  const admin = 'admin';
-
+export default function App() {
   return (
-    <>
-    <AuthProvider>
-      <Router>
-        <Navbar role={role} admin={admin} />
-        
-        <Routes>
-          {/*  Home Page */}
-          <Route path="/" element={<Home />} />
-          <Route path="/sectorlevel" element={<SectorOfficials/>}/>
-          {/* Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-
-          {/* Admin Route */}
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-
-          {/* Citizen Protected Route */}
-          <Route
-            path="/citizen/dashboard"
-            element={
-              <ProtectedRoute>
-                <CitizenDashboard />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Router>
+  
+    <GoogleOAuthProvider clientId="33616128040-1qso6v537e4nh9pdsnd6l6rurmnm9g2c.apps.googleusercontent.com">
+      <AuthProvider>
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/join" element={<Join />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/select-role" element={<SelectRole />} /> {/* 💡 New Route */}
+            <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
+            <Route path="/local/dashboard" element={<LocalLeaderDashboard />} />
+            <Route path="/sectorlevel" element={<SectorOfficials />} />
+          </Routes>
+          <Footer/>
+        </Router>
+      </AuthProvider>
       
-    </AuthProvider>
-    <Footer/>
-   </>
+    </GoogleOAuthProvider>
+
   );
 }
-
-export default App;

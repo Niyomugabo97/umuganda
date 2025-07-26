@@ -1,19 +1,17 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../supabaseClient";
 
-export default function AdminDashboard() {
+export default function LocalLeaderDashboard() {
   const [attendee, setAttendee] = useState({ name: "", district: "", sector: "", village: "", cell: "" });
   const [absentee, setAbsentee] = useState({ name: "", district: "", sector: "", village: "", cell: "", amount: "" });
   const [activity, setActivity] = useState({ location: "", date: "", image: null, description: "" });
-
+   const [nextSession, setNextSession] = useState({ location: "", day: "", date: "" });
   const [attendees, setAttendees] = useState([]);
   const [absentees, setAbsentees] = useState([]);
   const [activities, setActivities] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
+  const [nextSessions, setNextSessions] = useState([]);
 
-
-const [message, setMessage] = useState(null);      // holds the message text
-const [messageType, setMessageType] = useState(""); // "success" or "error"
 
 
   useEffect(() => {
@@ -119,52 +117,49 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
 
  const handleSaveActivity = async (e) => {
   e.preventDefault();
+
   if (!activity.image) {
     alert("Please upload an image");
     return;
   }
 
-  const fileExt = activity.image.name.split('.').pop();
-  const fileName = `${Date.now()}.${fileExt}`;
+  //  Prepare image upload form data
+  const formData = new FormData();
+  formData.append("file", activity.image);
+  formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); 
+  formData.append("cloud_name", "YOUR_CLOUD_NAME");        
 
-  const { error: uploadError } = await supabase.storage
-    .from('activity-images')
-    .upload(fileName, activity.image);
+  try {
+    // Upload to Cloudinary
+    const response = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
+      method: "POST",
+      body: formData
+    });
 
-  if (uploadError) {
-    alert("Error uploading image: " + uploadError.message);
-    return;
-  }
+    const result = await response.json();
+    const imageUrl = result.secure_url;
 
-  const { publicURL, error: urlError } = supabase.storage
-    .from('activity-images')
-    .getPublicUrl(fileName);
+    //  Save to localStorage or database
+    const newActivity = {
+      location: activity.location,
+      date: activity.date,
+      description: activity.description,
+      image_url: imageUrl,
+      id: Date.now()
+    };
 
-  if (urlError) {
-    alert("Error getting image URL: " + urlError.message);
-    return;
-  }
+    const storedActivities = JSON.parse(localStorage.getItem("activities")) || [];
+    const updatedActivities = [newActivity, ...storedActivities];
+    localStorage.setItem("activities", JSON.stringify(updatedActivities));
 
-  const { data, error } = await supabase.from('activities').insert([{
-    location: activity.location,
-    date: activity.date,
-    description: activity.description,
-    image_url: publicURL
-  }]);
-
-  if (error) {
-    alert("Error saving activity: " + error.message);
-  } else if (data && data.length > 0) {
-    setActivities(prev => [data[0], ...prev]);
+    setActivities(updatedActivities);
     setActivity({ location: "", date: "", image: null, description: "" });
-    alert("Activity added successfully!");
-  } else {
-    alert("No data returned from Supabase.");
+    alert("Activity saved with image on Cloudinary!");
+  } catch (error) {
+    console.error("Cloudinary upload failed:", error);
+    alert("Failed to upload image to Cloudinary.");
   }
 };
-
-
-
 
 
   const handleEdit = (index) => {
@@ -200,6 +195,25 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
     }
   };
 
+
+  async function fetchNextSessions() {
+    const { data, error } = await supabase.from('next_sessions').select('*').order('created_at', { ascending: false });
+    if (!error) setNextSessions(data);
+  }
+  const handleNextSessionChange = (e) => {
+    const { name, value } = e.target;
+    setNextSession(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddNextSession = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase.from('next_sessions').insert([nextSession]).select();
+    if (!error && data?.length > 0) {
+      setNextSessions(prev => [data[0], ...prev]);
+      setNextSession({ location: "", day: "", date: "" });
+      alert("Next session added successfully!");
+    }
+  };
  
 
 
@@ -256,6 +270,67 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
         )}
         <button type="submit" className="submit-btn">Save Activity</button>
       </form>
+
+           {/* Next Umuganda Session Form */}
+      <form onSubmit={handleAddNextSession} className="form-container">
+        <h3>Plan Next Umuganda Session</h3>
+        <div className="form-grid">
+          <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value={nextSession.location}
+            onChange={handleNextSessionChange}
+            required
+          />
+          <input
+            type="text"
+            name="day"
+            placeholder="Day (e.g., Saturday)"
+            value={nextSession.day}
+            onChange={handleNextSessionChange}
+            required
+          />
+          <input
+            type="date"
+            name="date"
+            value={nextSession.date}
+            onChange={handleNextSessionChange}
+            required
+          />
+        </div>
+        <button type="submit" className="submit-btn">Save Session Plan</button>
+      </form>
+
+      {/* Next Sessions Table */}
+      <h3 className="table-title">Upcoming Umuganda Sessions</h3>
+      <table className="attendance-table">
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Day</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {nextSessions.length > 0 ? (
+            nextSessions.map((session) => (
+              <tr key={session.id}>
+                <td>{session.location}</td>
+                <td>{session.day}</td>
+                <td>{session.date}</td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="3" className="empty-row">No next sessions saved yet.</td></tr>
+          )}
+        </tbody>
+      </table>
+    
+
+
+
+
 
       {/* Attendees Form */}
       <form onSubmit={handleSubmit} className="form-container">
@@ -456,4 +531,4 @@ const [messageType, setMessageType] = useState(""); // "success" or "error"
       `}</style>
     </div>
   );
-}
+};

@@ -1,49 +1,33 @@
-// src/pages/Login.js
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import { useNavigate, Link } from "react-router-dom";
-import './Login.css';
+// import React from "react";
+// import { GoogleLogin } from "@react-oauth/google";
+// import { useNavigate } from "react-router-dom";
 
-export default function Login() {
-  const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
-  const [error, setError] = useState("");
+// export default function Login() {
+//   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const success = await login(email, password);
-    if (success) {
-      navigate("/citizen/dashboard");
-    } else {
-      setError("Invalid credentials");
-    }
-  };
+//   const loginWithGoogle = (credentialResponse) => {
+//     try {
+      
+//        const decoded =(credentialResponse.credential);
+//       console.log("Google User:", decoded);
 
-  return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
-        {error && <p className="error">{error}</p>}
-      </form>
-      <p>
-        Don't have an account? <Link to="/signup">Signup</Link>
-      </p>
-    </div>
-  );
-}
+//       // Store user info
+//       localStorage.setItem("user", JSON.stringify(decoded));
+
+//       // Redirect
+//       navigate("/citizen");
+//     } catch (error) {
+//       console.error("Login failed:", error);
+//     }
+//   };
+
+//   return (
+//     <div>
+//       <h2>Login with Google</h2>
+//       <GoogleLogin
+//         onSuccess={loginWithGoogle}
+//         onError={() => alert("Login Failed")}
+//       />
+//     </div>
+//   );
+// }
