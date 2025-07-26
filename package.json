@@ -84,6 +84,7 @@
 
   "scripts": {
 
+      "build": "npm install --legacy-peer-deps && react-scripts build",
 
     "start": "react-scripts start",
 
@@ -94,14 +95,15 @@
     "deploy": "gh-pages -d build",
 
 
-    "build": "react-scripts build",
 
 
     "test": "react-scripts test",
 
 
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
 
+    "build": "react-scripts build",
+    "postinstall": "npm install --legacy-peer-deps"
 
   },
 
