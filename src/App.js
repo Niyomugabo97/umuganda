@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
+
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import SectorOfficials from "./pages/SectorDashboard";
@@ -21,7 +21,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/join" element={<Join />} />
-            <Route path="/login" element={<Login />} />
+          
             <Route path="/signup" element={<Signup />} />
             <Route path="/select-role" element={<SelectRole />} /> {/* 💡 New Route */}
             <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
