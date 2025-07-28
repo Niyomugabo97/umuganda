@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const getRole = () => {
     if (!user) return null;
@@ -49,7 +48,7 @@ export default function Navbar() {
             
           </>
         ) : (
-          <Link to="/join">Join</Link>
+          <Link to="/join">Signup/Login</Link>
         )}
       </div>
     </nav>
