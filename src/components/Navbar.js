@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
+
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user, logout } = useAuth();
@@ -23,14 +24,13 @@ export default function Navbar() {
 
   const role = getRole();
 
-  const handleLogout = () => {
-    logout();           // Clear user and role from context and localStorage
-    navigate("/login"); // Redirect to login page
-  };
+
 
   return (
     <nav className="navbar">
-      <h1 className="logo">Umuganda</h1>
+
+  
+      <h1 ><Link  to="/"className="link">Umuganda</Link></h1>
 
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
