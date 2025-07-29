@@ -1,12 +1,36 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient";
 
 export default function Home() {
   const [activities, setActivities] = useState([]);
+  const [sessions, setSessions] = useState([]);
+  const [loadingSessions, setLoadingSessions] = useState(true);
 
+  // Load activities from localStorage
   useEffect(() => {
     const storedActivities = JSON.parse(localStorage.getItem("activities")) || [];
     setActivities(storedActivities);
+  }, []);
+
+  // Fetch next_sessions from Supabase
+  useEffect(() => {
+    const fetchSessions = async () => {
+      const { data, error } = await supabase
+        .from("next_sessions")
+        .select("*")
+        .order("date", { ascending: true });
+
+      if (error) {
+        console.error("Error fetching sessions:", error);
+      } else {
+        setSessions(data);
+      }
+
+      setLoadingSessions(false);
+    };
+
+    fetchSessions();
   }, []);
 
   return (
@@ -44,6 +68,26 @@ export default function Home() {
                     style={{ width: "100%", maxWidth: "300px", borderRadius: "8px", marginTop: "10px" }}
                   />
                 )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Next Umuganda Sessions */}
+      <div style={styles.activityContainer}>
+        <h2>Upcoming Umuganda Sessions</h2>
+        {loadingSessions ? (
+          <p>Loading sessions...</p>
+        ) : sessions.length === 0 ? (
+          <p>No sessions scheduled yet.</p>
+        ) : (
+          <ul style={styles.activityList}>
+            {sessions.map((session, index) => (
+              <li key={index} style={styles.activityItem}>
+                <h3>{session.location}</h3>
+                <p><strong>Day:</strong> {session.day}</p>
+                <p><strong>Date:</strong> {session.date}</p>
               </li>
             ))}
           </ul>

@@ -5,19 +5,18 @@ export default function LocalLeaderDashboard() {
   const [attendee, setAttendee] = useState({ name: "", district: "", sector: "", village: "", cell: "" });
   const [absentee, setAbsentee] = useState({ name: "", district: "", sector: "", village: "", cell: "", amount: "" });
   const [activity, setActivity] = useState({ location: "", date: "", image: null, description: "" });
-   const [nextSession, setNextSession] = useState({ location: "", day: "", date: "" });
+  const [nextSession, setNextSession] = useState({ location: "", day: "", date: "" });
   const [attendees, setAttendees] = useState([]);
   const [absentees, setAbsentees] = useState([]);
   const [activities, setActivities] = useState([]);
   const [editIndex, setEditIndex] = useState(null);
   const [nextSessions, setNextSessions] = useState([]);
 
-
-
   useEffect(() => {
     fetchAttendees();
     fetchAbsentees();
     fetchActivities();
+    fetchNextSessions();
   }, []);
 
   async function fetchAttendees() {
@@ -59,6 +58,19 @@ export default function LocalLeaderDashboard() {
     }
   }
 
+  async function fetchNextSessions() {
+    const { data, error } = await supabase
+      .from('next_sessions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error("Fetch next sessions error:", error);
+      alert("Failed to load next sessions: " + error.message);
+    } else if (data) {
+      setNextSessions(data);
+    }
+  }
+
   const handleChange = (e, type) => {
     const { name, value } = e.target;
     if (type === "attendee") {
@@ -77,90 +89,95 @@ export default function LocalLeaderDashboard() {
     }
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (editIndex !== null) {
-    alert("Edit attendee not implemented on DB yet");
-    return;
-  }
-  const { data, error } = await supabase.from('attendees').insert([attendee]).select();
-  if (error) {
-    alert("Error adding attendee: " + error.message);
-  } else if (data && data.length > 0) {
-    setAttendees(prev => [data[0], ...prev]);
-    setAttendee({ name: "", district: "", sector: "", village: "", cell: "" });
-    alert("Attendee added successfully!");
-  } else {
-    alert("No data returned from Supabase.");
-  }
-};
-
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (editIndex !== null) {
+      alert("Edit attendee not implemented on DB yet");
+      return;
+    }
+    const { data, error } = await supabase.from('attendees').insert([attendee]).select();
+    if (error) {
+      alert("Error adding attendee: " + error.message);
+    } else if (data && data.length > 0) {
+      setAttendees(prev => [data[0], ...prev]);
+      setAttendee({ name: "", district: "", sector: "", village: "", cell: "" });
+      alert("Attendee added successfully!");
+    } else {
+      alert("No data returned from Supabase.");
+    }
+  };
 
   const handleAddAbsentee = async (e) => {
-  e.preventDefault();
-  const { data, error } = await supabase.from('absentees').insert([absentee]).select();
+    e.preventDefault();
+    const { data, error } = await supabase.from('absentees').insert([absentee]).select();
 
-  if (error) {
-    alert("Error adding absentee: " + error.message);
-  } else if (data && data.length > 0) {
-    setAbsentees(prev => [data[0], ...prev]);
-    setAbsentee({ name: "", district: "", sector: "", village: "", cell: "", amount: "" });
-    alert("Absentee added successfully!");
-  } else {
-    alert("No data returned from Supabase.");
-  }
-};
+    if (error) {
+      alert("Error adding absentee: " + error.message);
+    } else if (data && data.length > 0) {
+      setAbsentees(prev => [data[0], ...prev]);
+      setAbsentee({ name: "", district: "", sector: "", village: "", cell: "", amount: "" });
+      alert("Absentee added successfully!");
+    } else {
+      alert("No data returned from Supabase.");
+    }
+  };
 
+  const handleSaveActivity = async (e) => {
+    e.preventDefault();
 
+    if (!activity.image) {
+      alert("Please upload an image");
+      return;
+    }
 
+    const formData = new FormData();
+    formData.append("file", activity.image);
+    formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
 
- const handleSaveActivity = async (e) => {
-  e.preventDefault();
+    let imageUrl = "";
 
-  if (!activity.image) {
-    alert("Please upload an image");
-    return;
-  }
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-  //  Prepare image upload form data
-  const formData = new FormData();
-  formData.append("file", activity.image);
-  formData.append("upload_preset", "YOUR_UPLOAD_PRESET"); 
-  formData.append("cloud_name", "YOUR_CLOUD_NAME");        
+      const result = await response.json();
 
-  try {
-    // Upload to Cloudinary
-    const response = await fetch("https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload", {
-      method: "POST",
-      body: formData
-    });
+      if (!response.ok) {
+        throw new Error(result?.error?.message || "Image upload failed.");
+      }
 
-    const result = await response.json();
-    const imageUrl = result.secure_url;
+      imageUrl = result.secure_url;
+      console.log("Image uploaded:", imageUrl);
+    } catch (error) {
+      console.error("Cloudinary upload failed:", error);
+      alert("Failed to upload image: " + error.message);
+      return;
+    }
 
-    //  Save to localStorage or database
-    const newActivity = {
+    // Insert activity in Supabase
+    const { data, error } = await supabase.from('activities').insert([{
       location: activity.location,
       date: activity.date,
       description: activity.description,
       image_url: imageUrl,
-      id: Date.now()
-    };
+    }]).select();
 
-    const storedActivities = JSON.parse(localStorage.getItem("activities")) || [];
-    const updatedActivities = [newActivity, ...storedActivities];
-    localStorage.setItem("activities", JSON.stringify(updatedActivities));
+    if (error) {
+      alert("Error saving activity: " + error.message);
+      return;
+    }
 
-    setActivities(updatedActivities);
-    setActivity({ location: "", date: "", image: null, description: "" });
-    alert("Activity saved with image on Cloudinary!");
-  } catch (error) {
-    console.error("Cloudinary upload failed:", error);
-    alert("Failed to upload image to Cloudinary.");
-  }
-};
-
+    if (data && data.length > 0) {
+      setActivities(prev => [data[0], ...prev]);
+      setActivity({ location: "", date: "", image: null, description: "" });
+      alert("Activity saved successfully!");
+    }
+  };
 
   const handleEdit = (index) => {
     if (index >= 0 && index < attendees.length) {
@@ -195,11 +212,6 @@ export default function LocalLeaderDashboard() {
     }
   };
 
-
-  async function fetchNextSessions() {
-    const { data, error } = await supabase.from('next_sessions').select('*').order('created_at', { ascending: false });
-    if (!error) setNextSessions(data);
-  }
   const handleNextSessionChange = (e) => {
     const { name, value } = e.target;
     setNextSession(prev => ({ ...prev, [name]: value }));
@@ -212,13 +224,10 @@ export default function LocalLeaderDashboard() {
       setNextSessions(prev => [data[0], ...prev]);
       setNextSession({ location: "", day: "", date: "" });
       alert("Next session added successfully!");
+    } else if (error) {
+      alert("Error adding next session: " + error.message);
     }
   };
- 
-
-
-
-
 
   return (
     <div className="admin-dashboard">
@@ -226,7 +235,7 @@ export default function LocalLeaderDashboard() {
 
       {/* Community Activity Form */}
       <form onSubmit={handleSaveActivity} className="form-container">
-        <h3>Add Community Activity</h3>
+        <h3>Add recently Community Activity</h3>
         <div className="form-grid">
           <input
             type="text"
@@ -271,7 +280,44 @@ export default function LocalLeaderDashboard() {
         <button type="submit" className="submit-btn">Save Activity</button>
       </form>
 
-           {/* Next Umuganda Session Form */}
+      {/* Activities List */}
+      <h3 className="table-title">Community Activities</h3>
+      <table className="attendance-table">
+        <thead>
+          <tr>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Image</th>
+          </tr>
+        </thead>
+        <tbody>
+          {activities.length > 0 ? (
+            activities.map((act) => (
+              <tr key={act.id}>
+                <td>{act.location}</td>
+                <td>{act.date}</td>
+                <td>{act.description}</td>
+                <td>
+                  {act.image_url ? (
+                    <img 
+                      src={act.image_url} 
+                      alt={`Activity at ${act.location}`} 
+                      style={{ maxWidth: "150px", borderRadius: "8px" }} 
+                    />
+                  ) : (
+                    "No image"
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="4" className="empty-row">No activities recorded yet.</td></tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* Next Umuganda Session Form */}
       <form onSubmit={handleAddNextSession} className="form-container">
         <h3>Plan Next Umuganda Session</h3>
         <div className="form-grid">
@@ -326,11 +372,6 @@ export default function LocalLeaderDashboard() {
           )}
         </tbody>
       </table>
-    
-
-
-
-
 
       {/* Attendees Form */}
       <form onSubmit={handleSubmit} className="form-container">
@@ -441,7 +482,6 @@ export default function LocalLeaderDashboard() {
         </tbody>
       </table>
 
-      {/* CSS styles */}
       <style>{`
         .admin-dashboard {
           padding: 20px;
@@ -525,10 +565,10 @@ export default function LocalLeaderDashboard() {
         }
         .empty-row {
           text-align: center;
-          padding: 20px;
-          color: #999;
+          font-style: italic;
+          color: #777;
         }
       `}</style>
     </div>
   );
-};
+}
