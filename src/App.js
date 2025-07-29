@@ -14,7 +14,7 @@ import Footer from "./components/Footer";
 export default function App() {
   return (
   
-    <GoogleOAuthProvider clientId="33616128040-1qso6v537e4nh9pdsnd6l6rurmnm9g2c.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="33616128040-u8k7243l9lsud6kg3mhjbu8tu11iaie3.apps.googleusercontent.com">
       <AuthProvider>
         <Router>
           <Navbar />
