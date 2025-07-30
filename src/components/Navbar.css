@@ -1,28 +1,42 @@
-/* Navbar.css */
-
+/* Navbar container */
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  background-color: #0056b3; /* blue background */
+  justify-content: flex-start; /* Align everything to the left */
+  gap:30px; /* Space between logo and nav */
+  background-color: #0056b3;
   padding: 10px 20px;
   color: white;
   font-family: Arial, sans-serif;
   position: relative;
+  padding-left:50px;
+  margin-left:-10px;
+  
+
+  
 }
 
+/* Logo */
 .logo {
   font-size: 24px;
   font-weight: bold;
   cursor: default;
+  flex-shrink: 0;
 }
 
-/* Hamburger menu - hidden on desktop */
+.link {
+  color: white;
+  text-decoration: none;
+  display: inline-block;
+}
+
+/* Hamburger menu (mobile only) */
 .hamburger {
   font-size: 28px;
   cursor: pointer;
   display: none;
   user-select: none;
+  margin-left: auto; /* push it to the right */
 }
 
 /* Navigation links container */
@@ -31,6 +45,7 @@
   align-items: center;
   gap: 20px;
   transition: max-height 0.3s ease-in-out;
+  margin-left: auto;
 }
 
 .nav-links a {
@@ -46,7 +61,7 @@
   background-color: #003d7a;
 }
 
-/* Welcome text styling */
+/* Welcome message */
 .welcome {
   margin-left: 10px;
   font-style: italic;
@@ -69,13 +84,13 @@
     max-height: 0;
     overflow: hidden;
     border-radius: 0 0 10px 10px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     z-index: 10;
+    margin-left: 0;
   }
 
-  /* When menu is open */
   .nav-links.open {
-    max-height: 500px; /* enough to show all links */
+    max-height: 500px;
     padding: 10px 0;
   }
 
@@ -95,10 +110,3 @@
     font-weight: 600;
   }
 }
-
-.link{
-  color:white;
-  text-decoration: none;
-
-}
-

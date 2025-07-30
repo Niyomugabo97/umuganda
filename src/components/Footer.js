@@ -15,7 +15,8 @@ const styles = {
     textAlign: "center",
     backgroundColor: "#2c3e50ff",
     color: "#fff",
-    fontFamily: "sans-serif"
+    fontFamily: "sans-serif",
+    marginLeft:"-10px"
   },
   email: {
     color: "#1abc9c",

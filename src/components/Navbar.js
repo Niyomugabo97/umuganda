@@ -3,14 +3,12 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
-
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { user } = useAuth();
 
   const getRole = () => {
     if (!user) return null;
-
     if (user.role) return user.role;
 
     const email = user.email?.toLowerCase();
@@ -23,13 +21,11 @@ export default function Navbar() {
 
   const role = getRole();
 
-
-
   return (
     <nav className="navbar">
-
-  
-      <h1 ><Link  to="/"className="link">Umuganda</Link></h1>
+      <h1 className="logo">
+        <Link to="/" className="link">Umuganda</Link>
+      </h1>
 
       <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
         ☰
@@ -43,9 +39,7 @@ export default function Navbar() {
             {role === "citizen" && <Link to="/citizen/dashboard">Citizen Info</Link>}
             {role === "local" && <Link to="/local/dashboard">Local-Leaders</Link>}
             {role === "sector" && <Link to="/sectorlevel">Sector Level</Link>}
-
             <span className="welcome">Welcome, {user.name || user.email}</span>
-            
           </>
         ) : (
           <Link to="/join">Signup/Login</Link>

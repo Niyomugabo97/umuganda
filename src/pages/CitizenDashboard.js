@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { supabase } from "../supabaseClient"; // Make sure this path is correct
+import { supabase } from "../supabaseClient";
 import './CitizenDashboard.css';
 
 export default function CitizenDashboard() {
@@ -40,8 +40,10 @@ export default function CitizenDashboard() {
 
   return (
     <div className="dashboard">
-      <h2>Welcome {user?.email}</h2>
-      <button onClick={logout}>Logout</button>
+      <div className="dashboard-header">
+        <h2>Welcome {user?.email}</h2>
+        <button className="logout-btn" onClick={logout}>Logout</button>
+      </div>
 
       <div className="search-box">
         <input
