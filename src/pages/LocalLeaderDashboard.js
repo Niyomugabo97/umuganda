@@ -20,35 +20,70 @@ export default function LocalLeaderDashboard() {
   }, []);
 
   async function fetchAttendees() {
-    const { data, error } = await supabase.from('attendees').select('*').order('created_at', { ascending: false });
-    if (!error && data) setAttendees(data);
+    const { data, error } = await supabase
+      .from('attendees')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error("Fetch attendees error:", error);
+      alert("Failed to load attendees: " + error.message);
+    } else if (data) {
+      setAttendees(data);
+    }
   }
 
   async function fetchAbsentees() {
-    const { data, error } = await supabase.from('absentees').select('*').order('created_at', { ascending: false });
-    if (!error && data) setAbsentees(data);
+    const { data, error } = await supabase
+      .from('absentees')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error("Fetch absentees error:", error);
+      alert("Failed to load absentees: " + error.message);
+    } else if (data) {
+      setAbsentees(data);
+    }
   }
 
   async function fetchActivities() {
-    const { data, error } = await supabase.from('activities').select('*').order('created_at', { ascending: false });
-    if (!error && data) setActivities(data);
+    const { data, error } = await supabase
+      .from('activities')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error("Fetch activities error:", error);
+      alert("Failed to load activities: " + error.message);
+    } else if (data) {
+      setActivities(data);
+    }
   }
 
   async function fetchNextSessions() {
-    const { data, error } = await supabase.from('next_sessions').select('*').order('created_at', { ascending: false });
-    if (!error && data) setNextSessions(data);
+    const { data, error } = await supabase
+      .from('next_sessions')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.error("Fetch next sessions error:", error);
+      alert("Failed to load next sessions: " + error.message);
+    } else if (data) {
+      setNextSessions(data);
+    }
   }
 
   const handleChange = (e, type) => {
     const { name, value } = e.target;
-    if (type === "attendee") setAttendee(prev => ({ ...prev, [name]: value }));
-    if (type === "absentee") setAbsentee(prev => ({ ...prev, [name]: value }));
+    if (type === "attendee") {
+      setAttendee(prev => ({ ...prev, [name]: value }));
+    } else if (type === "absentee") {
+      setAbsentee(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleActivityChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "image") {
-      setActivity(prev => ({ ...prev, image: files?.[0] || null }));
+      setActivity(prev => ({ ...prev, image: files ? files[0] : null }));
     } else {
       setActivity(prev => ({ ...prev, [name]: value }));
     }
@@ -56,44 +91,75 @@ export default function LocalLeaderDashboard() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (editIndex !== null) {
+      alert("Edit attendee not implemented on DB yet");
+      return;
+    }
     const { data, error } = await supabase.from('attendees').insert([attendee]).select();
-    if (!error && data?.length) {
+    if (error) {
+      alert("Error adding attendee: " + error.message);
+    } else if (data && data.length > 0) {
       setAttendees(prev => [data[0], ...prev]);
       setAttendee({ name: "", district: "", sector: "", village: "", cell: "" });
+      alert("Attendee added successfully!");
+    } else {
+      alert("No data returned from Supabase.");
     }
   };
 
   const handleAddAbsentee = async (e) => {
     e.preventDefault();
     const { data, error } = await supabase.from('absentees').insert([absentee]).select();
-    if (!error && data?.length) {
+
+    if (error) {
+      alert("Error adding absentee: " + error.message);
+    } else if (data && data.length > 0) {
       setAbsentees(prev => [data[0], ...prev]);
       setAbsentee({ name: "", district: "", sector: "", village: "", cell: "", amount: "" });
+      alert("Absentee added successfully!");
+    } else {
+      alert("No data returned from Supabase.");
     }
   };
 
   const handleSaveActivity = async (e) => {
     e.preventDefault();
-    if (!activity.image) return alert("Please upload an image");
+
+    if (!activity.image) {
+      alert("Please upload an image");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("file", activity.image);
     formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
 
     let imageUrl = "";
+
     try {
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        { method: "POST", body: formData }
+        {
+          method: "POST",
+          body: formData,
+        }
       );
+
       const result = await response.json();
-      if (!response.ok) throw new Error(result?.error?.message || "Upload failed.");
+
+      if (!response.ok) {
+        throw new Error(result?.error?.message || "Image upload failed.");
+      }
+
       imageUrl = result.secure_url;
+      console.log("Image uploaded:", imageUrl);
     } catch (error) {
+      console.error("Cloudinary upload failed:", error);
       alert("Failed to upload image: " + error.message);
       return;
     }
 
+    // Insert activity in Supabase
     const { data, error } = await supabase.from('activities').insert([{
       location: activity.location,
       date: activity.date,
@@ -101,23 +167,15 @@ export default function LocalLeaderDashboard() {
       image_url: imageUrl,
     }]).select();
 
-    if (!error && data?.length) {
+    if (error) {
+      alert("Error saving activity: " + error.message);
+      return;
+    }
+
+    if (data && data.length > 0) {
       setActivities(prev => [data[0], ...prev]);
       setActivity({ location: "", date: "", image: null, description: "" });
-    }
-  };
-
-  const handleNextSessionChange = (e) => {
-    const { name, value } = e.target;
-    setNextSession(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleAddNextSession = async (e) => {
-    e.preventDefault();
-    const { data, error } = await supabase.from('next_sessions').insert([nextSession]).select();
-    if (!error && data?.length) {
-      setNextSessions(prev => [data[0], ...prev]);
-      setNextSession({ location: "", day: "", date: "" });
+      alert("Activity saved successfully!");
     }
   };
 
@@ -129,10 +187,12 @@ export default function LocalLeaderDashboard() {
   };
 
   const handleDelete = async (index) => {
-    const id = attendees[index]?.id;
-    if (!id) return;
+    if (index < 0 || index >= attendees.length) return;
+    const id = attendees[index].id;
     const { error } = await supabase.from('attendees').delete().eq('id', id);
-    if (!error) {
+    if (error) {
+      alert("Error deleting attendee: " + error.message);
+    } else {
       setAttendees(prev => prev.filter((_, i) => i !== index));
       if (editIndex === index) {
         setEditIndex(null);
@@ -142,11 +202,30 @@ export default function LocalLeaderDashboard() {
   };
 
   const handleDeleteAbsentee = async (index) => {
-    const id = absentees[index]?.id;
-    if (!id) return;
+    if (index < 0 || index >= absentees.length) return;
+    const id = absentees[index].id;
     const { error } = await supabase.from('absentees').delete().eq('id', id);
-    if (!error) {
+    if (error) {
+      alert("Error deleting absentee: " + error.message);
+    } else {
       setAbsentees(prev => prev.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleNextSessionChange = (e) => {
+    const { name, value } = e.target;
+    setNextSession(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleAddNextSession = async (e) => {
+    e.preventDefault();
+    const { data, error } = await supabase.from('next_sessions').insert([nextSession]).select();
+    if (!error && data?.length > 0) {
+      setNextSessions(prev => [data[0], ...prev]);
+      setNextSession({ location: "", day: "", date: "" });
+      alert("Next session added successfully!");
+    } else if (error) {
+      alert("Error adding next session: " + error.message);
     }
   };
 
@@ -154,214 +233,381 @@ export default function LocalLeaderDashboard() {
     <div className="admin-dashboard">
       <h2 className="dashboard-title">Welcome, Local Leader</h2>
 
-      {/* Activity Form */}
+      {/* Community Activity Form */}
       <form onSubmit={handleSaveActivity} className="form-container">
         <h3>Add recently Community Activity</h3>
         <div className="form-grid">
-          <input type="text" name="location" placeholder="Where activity happened" value={activity.location} onChange={handleActivityChange} required />
-          <input type="date" name="date" value={activity.date} onChange={handleActivityChange} required />
-          <input type="file" name="image" accept="image/*" onChange={handleActivityChange} required />
-          <input type="text" name="description" placeholder="Short description" value={activity.description} onChange={handleActivityChange} />
+          <input
+            type="text"
+            name="location"
+            placeholder="Where activity happened"
+            value={activity.location}
+            onChange={handleActivityChange}
+            required
+          />
+          <input
+            type="date"
+            name="date"
+            value={activity.date}
+            onChange={handleActivityChange}
+            required
+          />
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            onChange={handleActivityChange}
+            required
+          />
+          <input
+            type="text"
+            name="description"
+            placeholder="Short description"
+            value={activity.description}
+            onChange={handleActivityChange}
+          />
         </div>
         {activity.image && (
           <div style={{ marginTop: '10px' }}>
             <strong>Image Preview:</strong><br />
-            <img src={URL.createObjectURL(activity.image)} alt="Preview" style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "5px" }} />
+            <img
+              src={URL.createObjectURL(activity.image)}
+              alt="Preview"
+              style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "5px" }}
+            />
           </div>
         )}
         <button type="submit" className="submit-btn">Save Activity</button>
       </form>
 
-      {/* Activities Table */}
+      {/* Activities List */}
       <h3 className="table-title">Community Activities</h3>
       <table className="attendance-table">
         <thead>
-          <tr><th>Location</th><th>Date</th><th>Description</th><th>Image</th></tr>
+          <tr>
+            <th>Location</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Image</th>
+          </tr>
         </thead>
         <tbody>
-          {activities.length ? activities.map((a) => (
-            <tr key={a.id}>
-              <td>{a.location}</td>
-              <td>{a.date}</td>
-              <td>{a.description}</td>
-              <td>{a.image_url ? <img src={a.image_url} alt="" style={{ maxWidth: 100 }} /> : "No image"}</td>
-            </tr>
-          )) : <tr><td colSpan="4" className="empty-row">No activities recorded yet.</td></tr>}
+          {activities.length > 0 ? (
+            activities.map((act) => (
+              <tr key={act.id}>
+                <td>{act.location}</td>
+                <td>{act.date}</td>
+                <td>{act.description}</td>
+                <td>
+                  {act.image_url ? (
+                    <img 
+                      src={act.image_url} 
+                      alt={`Activity at ${act.location}`} 
+                      style={{ maxWidth: "150px", borderRadius: "8px" }} 
+                    />
+                  ) : (
+                    "No image"
+                  )}
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="4" className="empty-row">No activities recorded yet.</td></tr>
+          )}
         </tbody>
       </table>
 
-      {/* Next Session */}
+      {/* Next Umuganda Session Form */}
       <form onSubmit={handleAddNextSession} className="form-container">
         <h3>Plan Next Umuganda Session</h3>
         <div className="form-grid">
-          <input type="text" name="location" placeholder="Location" value={nextSession.location} onChange={handleNextSessionChange} required />
-          <input type="text" name="day" placeholder="Day (e.g., Saturday)" value={nextSession.day} onChange={handleNextSessionChange} required />
-          <input type="date" name="date" value={nextSession.date} onChange={handleNextSessionChange} required />
+          <input
+            type="text"
+            name="location"
+            placeholder="Location"
+            value={nextSession.location}
+            onChange={handleNextSessionChange}
+            required
+          />
+          <input
+            type="text"
+            name="day"
+            placeholder="Day (e.g., Saturday)"
+            value={nextSession.day}
+            onChange={handleNextSessionChange}
+            required
+          />
+          <input
+            type="date"
+            name="date"
+            value={nextSession.date}
+            onChange={handleNextSessionChange}
+            required
+          />
         </div>
         <button type="submit" className="submit-btn">Save Session Plan</button>
       </form>
 
+      {/* Next Sessions Table */}
       <h3 className="table-title">Upcoming Umuganda Sessions</h3>
       <table className="attendance-table">
         <thead>
-          <tr><th>Location</th><th>Day</th><th>Date</th></tr>
+          <tr>
+            <th>Location</th>
+            <th>Day</th>
+            <th>Date</th>
+          </tr>
         </thead>
         <tbody>
-          {nextSessions.length ? nextSessions.map((s) => (
-            <tr key={s.id}><td>{s.location}</td><td>{s.day}</td><td>{s.date}</td></tr>
-          )) : <tr><td colSpan="3" className="empty-row">No next sessions saved yet.</td></tr>}
+          {nextSessions.length > 0 ? (
+            nextSessions.map((session) => (
+              <tr key={session.id}>
+                <td>{session.location}</td>
+                <td>{session.day}</td>
+                <td>{session.date}</td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="3" className="empty-row">No next sessions saved yet.</td></tr>
+          )}
         </tbody>
       </table>
 
-      {/* Attendee Form */}
+      {/* Attendees Form */}
       <form onSubmit={handleSubmit} className="form-container">
         <h3>{editIndex !== null ? "Edit Attendee" : "Add Attendee"}</h3>
         <div className="form-grid">
-          {["name", "district", "sector", "village", "cell"].map((f) => (
-            <input key={f} name={f} type="text" value={attendee[f]} placeholder={f} onChange={(e) => handleChange(e, "attendee")} required />
+          {["name", "district", "sector", "village", "cell"].map((field) => (
+            <input
+              key={field}
+              type="text"
+              name={field}
+              placeholder={field[0].toUpperCase() + field.slice(1)}
+              value={attendee[field]}
+              onChange={(e) => handleChange(e, "attendee")}
+              required
+            />
           ))}
         </div>
-        <button className="submit-btn" type="submit">{editIndex !== null ? "Update" : "Add Attendee"}</button>
+        <button type="submit" className="submit-btn">
+          {editIndex !== null ? "Update Attendee" : "Add Attendee"}
+        </button>
       </form>
 
-      {/* Absentee Form */}
+      {/* Absentees Form */}
       <form onSubmit={handleAddAbsentee} className="form-container">
-        <h3>Add Absentee</h3>
+        <h3>Add Absentee (Fine Notifier)</h3>
         <div className="form-grid">
-          {["name", "district", "sector", "village", "cell", "amount"].map((f) => (
-            <input key={f} name={f} type={f === "amount" ? "number" : "text"} value={absentee[f]} placeholder={f} onChange={(e) => handleChange(e, "absentee")} required />
+          {["name", "district", "sector", "village", "cell", "amount"].map((field) => (
+            <input
+              key={field}
+              type={field === "amount" ? "number" : "text"}
+              name={field}
+              placeholder={field === "amount" ? "Amount to Pay (RWF)" : field[0].toUpperCase() + field.slice(1)}
+              value={absentee[field]}
+              onChange={(e) => handleChange(e, "absentee")}
+              required
+            />
           ))}
         </div>
-        <button className="submit-btn" type="submit">Add Absentee</button>
+        <button type="submit" className="submit-btn">Add Absentee</button>
       </form>
 
-      {/* CSS Styling */}
+      {/* Attendance List */}
+      <h3 className="table-title">Attendance List</h3>
+      <table className="attendance-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>District</th>
+            <th>Sector</th>
+            <th>Village</th>
+            <th>Cell</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {attendees.length > 0 ? (
+            attendees.map((a, index) => (
+              <tr key={a.id}>
+                <td>{a.name}</td>
+                <td>{a.district}</td>
+                <td>{a.sector}</td>
+                <td>{a.village}</td>
+                <td>{a.cell}</td>
+                <td>
+                  <button className="edit-btn" onClick={() => handleEdit(index)}>Edit</button>
+                  <button className="delete-btn" onClick={() => handleDelete(index)}>Delete</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="6" className="empty-row">No attendance records yet.</td></tr>
+          )}
+        </tbody>
+      </table>
+
+      {/* Absentees List */}
+      <h3 className="table-title">Absentees (Fined)</h3>
+      <table className="attendance-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>District</th>
+            <th>Sector</th>
+            <th>Village</th>
+            <th>Cell</th>
+            <th>Amount (RWF)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {absentees.length > 0 ? (
+            absentees.map((a, index) => (
+              <tr key={a.id}>
+                <td>{a.name}</td>
+                <td>{a.district}</td>
+                <td>{a.sector}</td>
+                <td>{a.village}</td>
+                <td>{a.cell}</td>
+                <td>{a.amount}</td>
+                <td>
+                  <button className="delete-btn" onClick={() => handleDeleteAbsentee(index)}>Remove</button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr><td colSpan="7" className="empty-row">No absentees recorded yet.</td></tr>
+          )}
+        </tbody>
+      </table>
+
+
+
       <style>{`
-        .admin-dashboard {
-          padding: 20px;
-          font-family: Arial, sans-serif;
-          max-width: 1200px;
-          margin: auto;
-        }
+         .admin-dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: auto;
+  }
 
-        .dashboard-title {
-          font-size: 24px;
-          font-weight: bold;
-          text-align: center;
-          margin-bottom: 20px;
-        }
+  .dashboard-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
 
-        .form-container {
-          background: #f9f9f9;
-          padding: 20px;
-          border-radius: 8px;
-          margin-bottom: 30px;
-        }
+  .form-container {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+  }
 
-        .form-container h3 {
-          margin-bottom: 15px;
-          text-align: center;
-        }
+  .form-container h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    text-align: center;
+  }
 
-        .form-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-          gap: 15px;
-          margin-bottom: 15px;
-        }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 15px;
+    margin-bottom: 15px;
+  }
 
-        .form-grid input {
-          padding: 10px;
-          font-size: 16px;
-          border-radius: 5px;
-          border: 1px solid #ccc;
-        }
+  .form-grid input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+  }
 
-        .submit-btn {
-          background-color: #007bff;
-          color: white;
-          padding: 10px 20px;
-          width: 100%;
-          border: none;
-          border-radius: 5px;
-          font-size: 16px;
-        }
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
 
-        .submit-btn:hover {
-          background-color: #0056b3;
-        }
+  .submit-btn:hover {
+    background-color: #0056b3;
+  }
 
-        .table-title {
-          text-align: center;
-          font-size: 20px;
-          margin-top: 40px;
-        }
+  .table-title {
+    font-size: 20px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
 
-        .attendance-table {
-          width: 100%;
-          border-collapse: collapse;
-          overflow-x: auto;
-          display: block;
-        }
+  .attendance-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-x: auto;
+    display: block;
+  }
 
-        .attendance-table th,
-        .attendance-table td {
-          border: 1px solid #ccc;
-          padding: 10px;
-          white-space: nowrap;
-          text-align: center;
-        }
+  .attendance-table th,
+  .attendance-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+  }
 
-        .attendance-table th {
-          background: #eee;
-        }
+  .attendance-table th {
+    background-color: #eee;
+    font-weight: bold;
+  }
 
-        .edit-btn,
-        .delete-btn {
-          padding: 6px 10px;
-          margin: 0 4px;
-          border: none;
-          border-radius: 5px;
-          font-size: 14px;
-          cursor: pointer;
-        }
+  .empty-row {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+  }
 
-        .edit-btn {
-          background-color: #ffc107;
-        }
+  /* Responsive tweaks */
+  @media screen and (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
 
-        .delete-btn {
-          background-color: #dc3545;
-          color: white;
-        }
+    .submit-btn {
+      font-size: 14px;
+    }
 
-        .empty-row {
-          text-align: center;
-          color: #777;
-        }
+    .form-container {
+      padding: 15px;
+    }
 
-        @media (max-width: 768px) {
-          .form-grid {
-            grid-template-columns: 1fr;
-          }
+    .dashboard-title {
+      font-size: 20px;
+    }
 
-          .submit-btn {
-            font-size: 14px;
-          }
+    .form-grid input {
+      font-size: 14px;
+    }
 
-          .attendance-table th,
-          .attendance-table td {
-            font-size: 14px;
-            padding: 8px;
-          }
-        }
+    .attendance-table th, .attendance-table td {
+      font-size: 14px;
+      padding: 8px;
+    }
+  }
 
-        @media (max-width: 480px) {
-          .edit-btn, .delete-btn {
-            font-size: 12px;
-            padding: 4px 6px;
-          }
-        }
+  @media screen and (max-width: 480px) {
+    .submit-btn {
+      padding: 8px 16px;
+    }
+  }
+
       `}</style>
     </div>
   );
