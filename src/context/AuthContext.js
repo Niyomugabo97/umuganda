@@ -1,22 +1,36 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { jwtDecode } from "jwt-decode"; // ✅ correct import for modern versions
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const loginWithGoogle = (credentialResponse) => {
-    // decode token for user info
-    const jwt_decode = require("jwt-decode");
-    const decoded = jwt_decode(credentialResponse.credential);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
-    setUser(decoded);
-    localStorage.setItem("user", JSON.stringify(decoded)); // optional persist
+  const loginWithGoogle = (credentialResponse) => {
+    const decoded = jwtDecode(credentialResponse.credential); // ✅ correct function name
+
+    const selectedRole = localStorage.getItem("role");
+
+    const userWithRole = {
+      ...decoded,
+      role: selectedRole || "unknown",
+    };
+
+    setUser(userWithRole);
+    localStorage.setItem("user", JSON.stringify(userWithRole));
   };
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
+    localStorage.removeItem("role");
   };
 
   return (

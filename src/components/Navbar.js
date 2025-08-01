@@ -5,7 +5,7 @@ import "./Navbar.css";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const getRole = () => {
     if (!user) return null;
@@ -39,7 +39,8 @@ export default function Navbar() {
             {role === "citizen" && <Link to="/citizen/dashboard">Citizen Info</Link>}
             {role === "local" && <Link to="/local/dashboard">Local-Leaders</Link>}
             {role === "sector" && <Link to="/sectorlevel">Sector Level</Link>}
-            <span className="welcome">Welcome, {user.name || user.email}</span>
+            {/* Optional logout */}
+            <button onClick={logout} style={{ marginLeft: "10px" }}>Logout</button>
           </>
         ) : (
           <Link to="/join">Signup/Login</Link>
