@@ -4,15 +4,8 @@ export default function SelectRole() {
   const navigate = useNavigate();
 
   const handleSelect = (role) => {
-    localStorage.setItem("role", role);
-
-    if (role === "local") {
-      navigate("/local/dashboard");
-    } else if (role === "sector") {
-      navigate("/sectorlevel");
-    } else {
-      navigate("/citizen/dashboard");
-    }
+    localStorage.setItem("role", role); // Store role temporarily
+    navigate("/auth"); // Send user to Google login page
   };
 
   return (

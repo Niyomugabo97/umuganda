@@ -11,6 +11,7 @@ import SelectRole from "./pages/SelectRole"; // 💡 added this line
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from "./context/AuthContext";
 import Footer from "./components/Footer";
+import Auth from "./Auth";
 export default function App() {
   return (
   
@@ -24,6 +25,7 @@ export default function App() {
           
             <Route path="/signup" element={<Signup />} />
             <Route path="/select-role" element={<SelectRole />} /> {/* 💡 New Route */}
+            <Route path="auth" element={<Auth/>}/>
             <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
             <Route path="/local/dashboard" element={<LocalLeaderDashboard />} />
             <Route path="/sectorlevel" element={<SectorOfficials />} />
