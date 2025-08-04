@@ -6,8 +6,6 @@ import SectorOfficials from "./pages/SectorDashboard";
 import CitizenDashboard from "./pages/CitizenDashboard";
 import LocalLeaderDashboard from "./pages/LocalLeaderDashboard";
 import Navbar from "./components/Navbar";
-import Join from "./pages/Join";
-import SelectRole from "./pages/SelectRole"; // 💡 added this line
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from "./context/AuthContext";
 import Footer from "./components/Footer";
@@ -22,10 +20,10 @@ export default function App() {
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/join" element={<Join />} />
+            
           
             <Route path="/signup" element={<Signup />} />
-            <Route path="/select-role" element={<SelectRole />} /> {/* 💡 New Route */}
+    
             <Route path="auth" element={<Auth/>}/>
 
              <Route
