@@ -13,7 +13,8 @@ import Auth from "./Auth";
 import ProtectedRoute from "./components/ProtectedRoute";
 export default function App() {
   return (
-  
+   
+     
     <GoogleOAuthProvider clientId="33616128040-u8k7243l9lsud6kg3mhjbu8tu11iaie3.apps.googleusercontent.com">
       <AuthProvider>
         <Router>
