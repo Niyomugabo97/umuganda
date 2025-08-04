@@ -351,6 +351,7 @@ export default function LocalLeaderDashboard() {
               <th>Cell</th>
               <th>Amount (RWF)</th>
               <th>Actions</th>
+              <th>Deadline</th>
             </tr>
           </thead>
           <tbody>
@@ -362,6 +363,7 @@ export default function LocalLeaderDashboard() {
                 <td>{a.village}</td>
                 <td>{a.cell}</td>
                 <td>{a.amount}</td>
+                <td>{a.Deadline}</td>
                 <td>
                   <button className="delete-btn" onClick={() => handleDeleteAbsentee(i)}>Remove</button>
                 </td>
