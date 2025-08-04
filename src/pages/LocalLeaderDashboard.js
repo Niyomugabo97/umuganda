@@ -313,67 +313,77 @@ export default function LocalLeaderDashboard() {
 
       {/* Absentees Form */}
       <section className="form-section">
-        <h3>Add Absentee (Fine Notifier)</h3>
-        <form onSubmit={handleAbsenteeSubmit} className="form-grid">
-          {["name", "district", "sector", "village", "cell"].map((field) => (
-            <input
-              key={field}
-              type="text"
-              name={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              value={absentee[field]}
-              onChange={handleAbsenteeChange}
-              required
-            />
-          ))}
-          <input
-            type="number"
-            name="amount"
-            placeholder="Amount to Pay (RWF)"
-            value={absentee.amount}
-            onChange={handleAbsenteeChange}
-            required
-          />
-          <button type="submit">Add Absentee</button>
-        </form>
-      </section>
+  <h3>Add Absentee (Fine Notifier)</h3>
+  <form onSubmit={handleAbsenteeSubmit} className="form-grid">
+    {["name", "district", "sector", "village", "cell"].map((field) => (
+      <input
+        key={field}
+        type="text"
+        name={field}
+        placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+        value={absentee[field]}
+        onChange={handleAbsenteeChange}
+        required
+      />
+    ))}
+    <input
+      type="number"
+      name="amount"
+      placeholder="Amount to Pay (RWF)"
+      value={absentee.amount}
+      onChange={handleAbsenteeChange}
+      required
+    />
+    <input
+      type="date"
+      name="deadline"
+      placeholder="Deadline"
+      value={absentee.deadline}
+      onChange={handleAbsenteeChange}
+      required
+    />
+    <button type="submit">Add Absentee</button>
+  </form>
+</section>
+
 
       {/* Absentees Table */}
-      <section className="table-section">
-        <h3 className="table-title">Absentees (Fined)</h3>
-        <table className="attendance-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>District</th>
-              <th>Sector</th>
-              <th>Village</th>
-              <th>Cell</th>
-              <th>Amount (RWF)</th>
-              <th>Actions</th>
-              <th>Deadline</th>
-            </tr>
-          </thead>
-          <tbody>
-            {absentees.length > 0 ? absentees.map((a, i) => (
-              <tr key={a.id}>
-                <td>{a.name}</td>
-                <td>{a.district}</td>
-                <td>{a.sector}</td>
-                <td>{a.village}</td>
-                <td>{a.cell}</td>
-                <td>{a.amount}</td>
-                <td>{a.Deadline}</td>
-                <td>
-                  <button className="delete-btn" onClick={() => handleDeleteAbsentee(i)}>Remove</button>
-                </td>
-              </tr>
-            )) : (
-              <tr><td colSpan="7" style={{ textAlign: "center" }}>No absentees recorded yet.</td></tr>
-            )}
-          </tbody>
-        </table>
-      </section>
+    <section className="table-section">
+  <h3 className="table-title">Absentees (Fined)</h3>
+  <table className="attendance-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>District</th>
+        <th>Sector</th>
+        <th>Village</th>
+        <th>Cell</th>
+        <th>Amount (RWF)</th>
+        <th>Deadline</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {absentees.length > 0 ? absentees.map((a, i) => (
+        <tr key={a.id}>
+          <td>{a.name}</td>
+          <td>{a.district}</td>
+          <td>{a.sector}</td>
+          <td>{a.village}</td>
+          <td>{a.cell}</td>
+          <td>{a.amount}</td>
+          <td>{a.deadline}</td>
+          <td>
+            <button className="delete-btn" onClick={() => handleDeleteAbsentee(i)}>Remove</button>
+          </td>
+        </tr>
+      )) : (
+        <tr><td colSpan="8" style={{ textAlign: "center" }}>No absentees recorded yet.</td></tr>
+      )}
+    </tbody>
+  </table>
+</section>
+
 
       {/* Activities Form */}
       <section className="form-section">
