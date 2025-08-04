@@ -16,7 +16,9 @@ const styles = {
     backgroundColor: "#2c3e50ff",
     color: "#fff",
     fontFamily: "sans-serif",
-    marginLeft:"-10px"
+    marginLeft:"-10px",
+    marginRight:"-10px",
+    marginBottom:"-10px"
   },
   email: {
     color: "#1abc9c",

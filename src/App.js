@@ -12,6 +12,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import { AuthProvider } from "./context/AuthContext";
 import Footer from "./components/Footer";
 import Auth from "./Auth";
+import ProtectedRoute from "./components/ProtectedRoute";
 export default function App() {
   return (
   
@@ -26,9 +27,33 @@ export default function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/select-role" element={<SelectRole />} /> {/* 💡 New Route */}
             <Route path="auth" element={<Auth/>}/>
-            <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
-            <Route path="/local/dashboard" element={<LocalLeaderDashboard />} />
-            <Route path="/sectorlevel" element={<SectorOfficials />} />
+
+             <Route
+              path="/citizen/dashboard"
+              element={
+              
+                  <CitizenDashboard />
+                
+              }
+            />
+
+             <Route
+              path="/local/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={["local"]}>
+                  <LocalLeaderDashboard />
+                </ProtectedRoute>
+              }
+            />
+             <Route
+              path="/sectorlevel"
+              element={
+                <ProtectedRoute allowedRoles={["sector"]}>
+                  <SectorOfficials />
+                </ProtectedRoute>
+              }
+            />
+            
           </Routes>
           <Footer/>
         </Router>
