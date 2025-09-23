@@ -1,92 +1,74 @@
-// src/pages/Signup.js
-import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../supabaseClient";
 import { useState } from "react";
 
 export default function Signup() {
   const navigate = useNavigate();
-  
-  // Local state for manual signup
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  // Handle normal form signup
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Store user info (later you’ll connect this with your backend)
-    localStorage.setItem("user", JSON.stringify(formData));
+    // 1️⃣ Create user in Supabase Auth
+    const { user, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
 
-    // Redirect to role selection
-    navigate("/select-role");
-  };
+    if (signUpError) {
+      alert(signUpError.message);
+      return;
+    }
 
-  // Handle Google Signup success
-  const handleSignupSuccess = (credentialResponse) => {
-    const decoded = credentialResponse.credential;
+    // 2️⃣ Insert name into "profiles" table (make sure you have a table called "profiles")
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .insert([{ id: user.id, name, email }]);
 
-    localStorage.setItem("user", JSON.stringify(decoded));
-    navigate("/select-role");
+    if (profileError) {
+      alert("Failed to save profile: " + profileError.message);
+      return;
+    }
+
+    // 3️⃣ Redirect to dashboard
+    navigate("/local/dashboard");
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div style={{ maxWidth: "400px", margin: "50px auto" }}>
       <h2>Signup</h2>
-
-      {/* Manual Signup Form */}
-      <form 
-        onSubmit={handleSubmit} 
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "10px",
-          marginBottom: "30px"
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
+          name="name"
           placeholder="Full Name"
-          value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
-          style={{ padding: "10px", width: "250px" }}
-        />
+        /><br /><br />
         <input
           type="email"
+          name="email"
           placeholder="Email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           required
-          style={{ padding: "10px", width: "250px" }}
-        />
+        /><br /><br />
         <input
           type="password"
+          name="password"
           placeholder="Password"
-          value={formData.password}
-          onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
-          style={{ padding: "10px", width: "250px" }}
-        />
-
-        <button 
-          type="submit" 
-          style={{ padding: "10px 20px", marginTop: "10px" }}
-        >
-          Sign Up
-        </button>
+        /><br /><br />
+        <button type="submit">Signup</button>
       </form>
-
-      <h3>Or</h3>
-
-      {/* Google Signup */}
-      <GoogleLogin
-        onSuccess={handleSignupSuccess}
-        onError={() => console.log("Google Signup Failed")}
-      />
+      <p>
+        Already have an account? <Link to="/login">Login</Link>
+      </p>
     </div>
   );
 }
