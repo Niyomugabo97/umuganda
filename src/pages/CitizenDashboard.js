@@ -42,7 +42,6 @@ export default function CitizenDashboard() {
     <div className="dashboard">
       <div className="dashboard-header">
         <h2>Welcome {user?.email}</h2>
-        <button className="logout-btn" onClick={logout}>Logout</button>
       </div>
 
       <div className="search-box">
