@@ -19,8 +19,17 @@ export default function Navbar() {
 
       <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         <Link to="/">Home</Link>
-        <Link to="/citizen/dashboard">Citizen Info</Link>
-        <Link to={user ? "/admin" : "/auth"}>{user ? "Admin Panel" : "Sign In"}</Link>
+        {user ? (
+          <>
+            {user.role === "admin" ? (
+              <Link to="/admin">Admin Panel</Link>
+            ) : (
+              <Link to="/citizen/dashboard">Citizen Info</Link>
+            )}
+          </>
+        ) : (
+          <Link to="/auth">Sign In</Link>
+        )}
 
       
       </div>

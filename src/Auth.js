@@ -9,7 +9,11 @@ export default function Auth() {
 
   useEffect(() => {
     if (user) {
-      navigate("/local/dashboard"); // Redirect to local dashboard
+      if (user.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/citizen/dashboard");
+      }
     }
   }, [user, navigate]);
 

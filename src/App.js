@@ -27,16 +27,16 @@ export default function App() {
 
            <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
 
-           {/* Unified Admin Control Panel */}
+           {/* Admin-only Control Panel */}
            <Route path="/admin" element={
-             <ProtectedRoute allowedRoles={["local", "sector"]}>
+             <ProtectedRoute allowedRoles={["admin"]}>
                <AdminDashboard />
              </ProtectedRoute>
            }/>
 
-           {/* Backward-compatible redirects to Admin */}
-           <Route path="/local/dashboard" element={<Navigate to="/admin" replace />} />
-           <Route path="/sectorlevel" element={<Navigate to="/admin" replace />} />
+           {/* Backward-compatible redirects to Citizen area */}
+          <Route path="/local/dashboard" element={<Navigate to="/citizen/dashboard" replace />} />
+          <Route path="/sectorlevel" element={<Navigate to="/citizen/dashboard" replace />} />
       </Routes>
 
       <Footer/>
