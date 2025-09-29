@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode"; // ✅ correct import for modern versions
+import { supabase } from "../supabaseClient";
 
 const AuthContext = createContext();
 
@@ -27,6 +28,35 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("user", JSON.stringify(userWithRole));
   };
 
+  // Email/password using Supabase Auth
+  const loginWithEmail = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    const selectedRole = localStorage.getItem("role");
+    const userWithRole = {
+      id: data.user?.id,
+      email: data.user?.email || email,
+      role: selectedRole || "unknown",
+    };
+    setUser(userWithRole);
+    localStorage.setItem("user", JSON.stringify(userWithRole));
+    return userWithRole;
+  };
+
+  const signupWithEmail = async (email, password) => {
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
+    const selectedRole = localStorage.getItem("role");
+    const userWithRole = {
+      id: data.user?.id,
+      email: data.user?.email || email,
+      role: selectedRole || "unknown",
+    };
+    setUser(userWithRole);
+    localStorage.setItem("user", JSON.stringify(userWithRole));
+    return userWithRole;
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem("user");
@@ -34,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loginWithGoogle, logout }}>
+    <AuthContext.Provider value={{ user, loginWithGoogle, loginWithEmail, signupWithEmail, logout }}>
       {children}
     </AuthContext.Provider>
   );
