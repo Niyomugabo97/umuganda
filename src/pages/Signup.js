@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ export default function Signup() {
     e.preventDefault();
 
     // 1️⃣ Create user in Supabase Auth
-    const { user, error: signUpError } = await supabase.auth.signUp({
+    const { data, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -25,7 +25,7 @@ export default function Signup() {
     // 2️⃣ Insert name into "profiles" table (make sure you have a table called "profiles")
     const { error: profileError } = await supabase
       .from("profiles")
-      .insert([{ id: user.id, name, email }]);
+      .insert([{ id: data?.user?.id, name, email }]);
 
     if (profileError) {
       alert("Failed to save profile: " + profileError.message);
