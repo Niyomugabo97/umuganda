@@ -1,8 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "../supabaseClient";
 import "./LocalLeaderDashboard.css";
 
 export default function LocalLeaderDashboard() {
+  // Refs for printing specific tables
+  const attendanceRef = useRef(null);
+  const absenteesRef = useRef(null);
+  // Toggle to show/hide input forms (hidden as requested)
+  const showForms = false;
   const [attendee, setAttendee] = useState({ name: "", district: "", sector: "", village: "", cell: "" });
   const [absentee, setAbsentee] = useState({ name: "", district: "", sector: "", village: "", cell: "", amount: "" });
   const [activity, setActivity] = useState({ location: "", date: "", image: null, description: "" });
@@ -31,6 +36,32 @@ export default function LocalLeaderDashboard() {
     setActivities(activitiesData || []);
     setNextSessions(sessionsData || []);
   };
+
+  // Print helpers
+  const printElement = (element, title = "Print") => {
+    if (!element) return;
+    const content = element.outerHTML;
+    const styles = `
+      <style>
+        body { font-family: Arial, sans-serif; padding: 16px; }
+        h1 { font-size: 20px; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        thead { background: #f5f5f5; }
+      </style>
+    `;
+    const w = window.open("", "_blank");
+    if (!w) return;
+    w.document.write(`<!doctype html><html><head><title>${title}</title>${styles}</head><body><h1>${title}</h1>${content}</body></html>`);
+    w.document.close();
+    w.focus();
+    w.print();
+    w.close();
+  };
+
+  const handlePrintAttendance = () => printElement(attendanceRef.current, "Attendance List");
+  const handlePrintAbsentees = () => printElement(absenteesRef.current, "Absentees (Fined)");
+  const handlePrintAll = () => window.print();
 
   // -- Attendee Handlers --
 
@@ -257,30 +288,38 @@ export default function LocalLeaderDashboard() {
 
   return (
     <div className="dashboard-container">
-
-      {/* Attendees Form */}
-      <section className="form-section">
-        <h3>{editAttendeeIndex !== null ? "Edit Attendee" : "Add Attendee"}</h3>
-        <form onSubmit={handleAttendeeSubmit} className="form-grid">
-          {["name", "district", "sector", "village", "cell"].map((field) => (
-            <input
-              key={field}
-              type="text"
-              name={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              value={attendee[field]}
-              onChange={handleAttendeeChange}
-              required
-            />
-          ))}
-          <button type="submit">{editAttendeeIndex !== null ? "Update Attendee" : "Add Attendee"}</button>
-        </form>
+      {/* Print Controls */}
+      <section className="table-section" style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+        <button onClick={handlePrintAttendance}>Print Attendance</button>
+        <button onClick={handlePrintAbsentees}>Print Absentees</button>
+        <button onClick={handlePrintAll}>Print All</button>
       </section>
+
+      {/* Attendees Form (hidden) */}
+      {showForms && (
+        <section className="form-section">
+          <h3>{editAttendeeIndex !== null ? "Edit Attendee" : "Add Attendee"}</h3>
+          <form onSubmit={handleAttendeeSubmit} className="form-grid">
+            {["name", "district", "sector", "village", "cell"].map((field) => (
+              <input
+                key={field}
+                type="text"
+                name={field}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={attendee[field]}
+                onChange={handleAttendeeChange}
+                required
+              />
+            ))}
+            <button type="submit">{editAttendeeIndex !== null ? "Update Attendee" : "Add Attendee"}</button>
+          </form>
+        </section>
+      )}
 
       {/* Attendees Table */}
       <section className="table-section">
         <h3 className="table-title">Attendance List</h3>
-        <table className="attendance-table">
+        <table ref={attendanceRef} className="attendance-table">
           <thead>
             <tr>
               <th>Name</th>
@@ -311,46 +350,48 @@ export default function LocalLeaderDashboard() {
         </table>
       </section>
 
-      {/* Absentees Form */}
-      <section className="form-section">
-  <h3>Add Absentee (Fine Notifier)</h3>
-  <form onSubmit={handleAbsenteeSubmit} className="form-grid">
-    {["name", "district", "sector", "village", "cell"].map((field) => (
-      <input
-        key={field}
-        type="text"
-        name={field}
-        placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-        value={absentee[field]}
-        onChange={handleAbsenteeChange}
-        required
-      />
-    ))}
-    <input
-      type="number"
-      name="amount"
-      placeholder="Amount to Pay (RWF)"
-      value={absentee.amount}
-      onChange={handleAbsenteeChange}
-      required
-    />
-    <input
-      type="date"
-      name="deadline"
-      placeholder="Deadline"
-      value={absentee.deadline}
-      onChange={handleAbsenteeChange}
-      required
-    />
-    <button type="submit">Add Absentee</button>
-  </form>
-</section>
+      {/* Absentees Form (hidden) */}
+      {showForms && (
+        <section className="form-section">
+          <h3>Add Absentee (Fine Notifier)</h3>
+          <form onSubmit={handleAbsenteeSubmit} className="form-grid">
+            {["name", "district", "sector", "village", "cell"].map((field) => (
+              <input
+                key={field}
+                type="text"
+                name={field}
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={absentee[field]}
+                onChange={handleAbsenteeChange}
+                required
+              />
+            ))}
+            <input
+              type="number"
+              name="amount"
+              placeholder="Amount to Pay (RWF)"
+              value={absentee.amount}
+              onChange={handleAbsenteeChange}
+              required
+            />
+            <input
+              type="date"
+              name="deadline"
+              placeholder="Deadline"
+              value={absentee.deadline}
+              onChange={handleAbsenteeChange}
+              required
+            />
+            <button type="submit">Add Absentee</button>
+          </form>
+        </section>
+      )}
 
 
       {/* Absentees Table */}
     <section className="table-section">
   <h3 className="table-title">Absentees (Fined)</h3>
-  <table className="attendance-table">
+  <table ref={absenteesRef} className="attendance-table">
     <thead>
       <tr>
         <th>Name</th>
@@ -385,53 +426,55 @@ export default function LocalLeaderDashboard() {
 </section>
 
 
-      {/* Activities Form */}
-      <section className="form-section">
-        <h3>{editActivityIndex !== null ? "Edit Community Activity" : "Add Community Activity"}</h3>
-        <form onSubmit={handleSaveActivity} className="form-grid" encType="multipart/form-data">
-          <input
-            type="text"
-            name="location"
-            placeholder="Where activity happened"
-            value={activity.location}
-            onChange={handleActivityChange}
-            required
-          />
-          <input
-            type="date"
-            name="date"
-            value={activity.date}
-            onChange={handleActivityChange}
-            required
-          />
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleActivityChange}
-            // required only for new activities, not for edit when image already exists
-            required={editActivityIndex === null}
-          />
-          <input
-            type="text"
-            name="description"
-            placeholder="Short description"
-            value={activity.description}
-            onChange={handleActivityChange}
-          />
-          <button type="submit">{editActivityIndex !== null ? "Update Activity" : "Save Activity"}</button>
-        </form>
-        {activity.image && typeof activity.image !== "string" && (
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <strong>Image Preview:</strong><br />
-            <img
-              src={URL.createObjectURL(activity.image)}
-              alt="Preview"
-              style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "5px" }}
+      {/* Activities Form (hidden) */}
+      {showForms && (
+        <section className="form-section">
+          <h3>{editActivityIndex !== null ? "Edit Community Activity" : "Add Community Activity"}</h3>
+          <form onSubmit={handleSaveActivity} className="form-grid" encType="multipart/form-data">
+            <input
+              type="text"
+              name="location"
+              placeholder="Where activity happened"
+              value={activity.location}
+              onChange={handleActivityChange}
+              required
             />
-          </div>
-        )}
-      </section>
+            <input
+              type="date"
+              name="date"
+              value={activity.date}
+              onChange={handleActivityChange}
+              required
+            />
+            <input
+              type="file"
+              name="image"
+              accept="image/*"
+              onChange={handleActivityChange}
+              // required only for new activities, not for edit when image already exists
+              required={editActivityIndex === null}
+            />
+            <input
+              type="text"
+              name="description"
+              placeholder="Short description"
+              value={activity.description}
+              onChange={handleActivityChange}
+            />
+            <button type="submit">{editActivityIndex !== null ? "Update Activity" : "Save Activity"}</button>
+          </form>
+          {activity.image && typeof activity.image !== "string" && (
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+              <strong>Image Preview:</strong><br />
+              <img
+                src={URL.createObjectURL(activity.image)}
+                alt="Preview"
+                style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "5px" }}
+              />
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Activities Table */}
       <section className="table-section">
@@ -471,36 +514,38 @@ export default function LocalLeaderDashboard() {
         </table>
       </section>
 
-      {/* Next Sessions Form */}
-      <section className="form-section">
-        <h3>{editSessionIndex !== null ? "Edit Next Umuganda Session" : "Plan Next Umuganda Session"}</h3>
-        <form onSubmit={handleAddNextSession} className="form-grid">
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={nextSession.location}
-            onChange={handleNextSessionChange}
-            required
-          />
-          <input
-            type="text"
-            name="day"
-            placeholder="Day (e.g., Saturday)"
-            value={nextSession.day}
-            onChange={handleNextSessionChange}
-            required
-          />
-          <input
-            type="date"
-            name="date"
-            value={nextSession.date}
-            onChange={handleNextSessionChange}
-            required
-          />
-          <button type="submit">{editSessionIndex !== null ? "Update Session" : "Add Session"}</button>
-        </form>
-      </section>
+      {/* Next Sessions Form (hidden) */}
+      {showForms && (
+        <section className="form-section">
+          <h3>{editSessionIndex !== null ? "Edit Next Umuganda Session" : "Plan Next Umuganda Session"}</h3>
+          <form onSubmit={handleAddNextSession} className="form-grid">
+            <input
+              type="text"
+              name="location"
+              placeholder="Location"
+              value={nextSession.location}
+              onChange={handleNextSessionChange}
+              required
+            />
+            <input
+              type="text"
+              name="day"
+              placeholder="Day (e.g., Saturday)"
+              value={nextSession.day}
+              onChange={handleNextSessionChange}
+              required
+            />
+            <input
+              type="date"
+              name="date"
+              value={nextSession.date}
+              onChange={handleNextSessionChange}
+              required
+            />
+            <button type="submit">{editSessionIndex !== null ? "Update Session" : "Add Session"}</button>
+          </form>
+        </section>
+      )}
 
       {/* Next Sessions Table */}
       <section className="table-section">
