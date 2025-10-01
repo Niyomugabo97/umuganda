@@ -259,23 +259,7 @@ export default function LocalLeaderDashboard() {
     <div className="dashboard-container">
 
       {/* Attendees Form */}
-      <section className="form-section">
-        <h3>{editAttendeeIndex !== null ? "Edit Attendee" : "Add Attendee"}</h3>
-        <form onSubmit={handleAttendeeSubmit} className="form-grid">
-          {["name", "district", "sector", "village", "cell"].map((field) => (
-            <input
-              key={field}
-              type="text"
-              name={field}
-              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-              value={attendee[field]}
-              onChange={handleAttendeeChange}
-              required
-            />
-          ))}
-          <button type="submit">{editAttendeeIndex !== null ? "Update Attendee" : "Add Attendee"}</button>
-        </form>
-      </section>
+      
 
       {/* Attendees Table */}
       <section className="table-section">
@@ -312,40 +296,7 @@ export default function LocalLeaderDashboard() {
       </section>
 
       {/* Absentees Form */}
-      <section className="form-section">
-  <h3>Add Absentee (Fine Notifier)</h3>
-  <form onSubmit={handleAbsenteeSubmit} className="form-grid">
-    {["name", "district", "sector", "village", "cell"].map((field) => (
-      <input
-        key={field}
-        type="text"
-        name={field}
-        placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
-        value={absentee[field]}
-        onChange={handleAbsenteeChange}
-        required
-      />
-    ))}
-    <input
-      type="number"
-      name="amount"
-      placeholder="Amount to Pay (RWF)"
-      value={absentee.amount}
-      onChange={handleAbsenteeChange}
-      required
-    />
-    <input
-      type="date"
-      name="deadline"
-      placeholder="Deadline"
-      value={absentee.deadline}
-      onChange={handleAbsenteeChange}
-      required
-    />
-    <button type="submit">Add Absentee</button>
-  </form>
-</section>
-
+    
 
       {/* Absentees Table */}
     <section className="table-section">
@@ -386,52 +337,7 @@ export default function LocalLeaderDashboard() {
 
 
       {/* Activities Form */}
-      <section className="form-section">
-        <h3>{editActivityIndex !== null ? "Edit Community Activity" : "Add Community Activity"}</h3>
-        <form onSubmit={handleSaveActivity} className="form-grid" encType="multipart/form-data">
-          <input
-            type="text"
-            name="location"
-            placeholder="Where activity happened"
-            value={activity.location}
-            onChange={handleActivityChange}
-            required
-          />
-          <input
-            type="date"
-            name="date"
-            value={activity.date}
-            onChange={handleActivityChange}
-            required
-          />
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleActivityChange}
-            // required only for new activities, not for edit when image already exists
-            required={editActivityIndex === null}
-          />
-          <input
-            type="text"
-            name="description"
-            placeholder="Short description"
-            value={activity.description}
-            onChange={handleActivityChange}
-          />
-          <button type="submit">{editActivityIndex !== null ? "Update Activity" : "Save Activity"}</button>
-        </form>
-        {activity.image && typeof activity.image !== "string" && (
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <strong>Image Preview:</strong><br />
-            <img
-              src={URL.createObjectURL(activity.image)}
-              alt="Preview"
-              style={{ maxWidth: "200px", borderRadius: "8px", marginTop: "5px" }}
-            />
-          </div>
-        )}
-      </section>
+   
 
       {/* Activities Table */}
       <section className="table-section">
@@ -472,35 +378,7 @@ export default function LocalLeaderDashboard() {
       </section>
 
       {/* Next Sessions Form */}
-      <section className="form-section">
-        <h3>{editSessionIndex !== null ? "Edit Next Umuganda Session" : "Plan Next Umuganda Session"}</h3>
-        <form onSubmit={handleAddNextSession} className="form-grid">
-          <input
-            type="text"
-            name="location"
-            placeholder="Location"
-            value={nextSession.location}
-            onChange={handleNextSessionChange}
-            required
-          />
-          <input
-            type="text"
-            name="day"
-            placeholder="Day (e.g., Saturday)"
-            value={nextSession.day}
-            onChange={handleNextSessionChange}
-            required
-          />
-          <input
-            type="date"
-            name="date"
-            value={nextSession.date}
-            onChange={handleNextSessionChange}
-            required
-          />
-          <button type="submit">{editSessionIndex !== null ? "Update Session" : "Add Session"}</button>
-        </form>
-      </section>
+      
 
       {/* Next Sessions Table */}
       <section className="table-section">
