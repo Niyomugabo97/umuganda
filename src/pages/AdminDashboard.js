@@ -25,7 +25,7 @@ export default function AdminDashboard() {
             cursor: "pointer",
           }}
         >
-          User information 
+          Local Leader
         </button>
         <button
           onClick={() => setActiveTab("sector")}
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
             cursor: "pointer",
           }}
         >
-          Attendance Performance
+          Sector Dashboard
         </button>
         <button
           onClick={() => setActiveTab("forms")}
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
             cursor: "pointer",
           }}
         >
-          ActivityForms
+          Forms
         </button>
       </div>
 
