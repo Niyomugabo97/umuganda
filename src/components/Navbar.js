@@ -53,12 +53,12 @@ export default function Navbar() {
 
       <div className={`nav-links ${menuOpen ? "open" : ""}`} style={{ position: "relative" }}>
         <Link to="/">Home</Link>
+        {/* Public access to citizen dashboard */}
+        <Link to="/citizen/dashboard">Citizen Info</Link>
         {user ? (
           <>
-            {user.role === "admin" ? (
+            {user.role === "admin" && (
               <Link to="/admin">Admin Panel</Link>
-            ) : (
-              <Link to="/citizen/dashboard">Citizen Info</Link>
             )}
             <button onClick={logout} style={{ marginLeft: 8 }}>Logout</button>
           </>

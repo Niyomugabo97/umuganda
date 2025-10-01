@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { supabase } from "../supabaseClient";
 import './CitizenDashboard.css';
 
 export default function CitizenDashboard() {
-  const { user, logout } = useAuth();
-
   const [attendees, setAttendees] = useState([]);
   const [absentees, setAbsentees] = useState([]);
 
-  const [searchName, setSearchName] = useState("");
+  const [searchName, setSearchName] = useState(() => localStorage.getItem('citizenName') || "");
   const [filteredAttendance, setFilteredAttendance] = useState([]);
   const [filteredAbsence, setFilteredAbsence] = useState([]);
 
@@ -23,6 +20,13 @@ export default function CitizenDashboard() {
       } else {
         setAttendees(att);
         setAbsentees(abs);
+        // Auto-filter if we already know the citizen's name
+        const saved = localStorage.getItem('citizenName');
+        if (saved && saved.trim()) {
+          const nameLower = saved.toLowerCase();
+          setFilteredAttendance(att.filter(a => a.name?.toLowerCase() === nameLower));
+          setFilteredAbsence(abs.filter(a => a.name?.toLowerCase() === nameLower));
+        }
       }
     };
     fetchData();
@@ -36,12 +40,21 @@ export default function CitizenDashboard() {
 
     setFilteredAttendance(matchedAttendance);
     setFilteredAbsence(matchedAbsence);
+    // Remember for future visits
+    if (searchName && searchName.trim()) {
+      localStorage.setItem('citizenName', searchName.trim());
+    }
   };
 
   return (
     <div className="dashboard">
       <div className="dashboard-header">
-        <h2>Welcome {user?.email}</h2>
+        <h2>Citizen Dashboard</h2>
+        {searchName ? (
+          <p style={{ marginTop: 4 }}>Showing information for: <strong>{searchName}</strong></p>
+        ) : (
+          <p style={{ marginTop: 4 }}>Enter your name to view your records. We'll remember it on this device.</p>
+        )}
       </div>
 
       <div className="search-box">
@@ -52,6 +65,11 @@ export default function CitizenDashboard() {
           onChange={(e) => setSearchName(e.target.value)}
         />
         <button onClick={handleSearch}>Search</button>
+        {localStorage.getItem('citizenName') && (
+          <button style={{ marginLeft: 8 }} onClick={() => { localStorage.removeItem('citizenName'); setSearchName(""); setFilteredAttendance([]); setFilteredAbsence([]); }}>
+            Change name
+          </button>
+        )}
       </div>
 
       <div className="dashboard-grid">
