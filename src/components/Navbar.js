@@ -146,20 +146,22 @@ export default function Navbar() {
 
                 <div style={{ textAlign: "center", margin: "6px 0" }}>or</div>
 
-                <GoogleLogin
-                  onSuccess={(cred) => {
-                    try {
-                      loginWithGoogle(cred);
-                      // user state updates via context; read from localStorage for role
-                      const stored = localStorage.getItem("user");
-                      const parsed = stored ? JSON.parse(stored) : null;
-                      afterAuthRedirect(parsed || { role: localStorage.getItem("role") || "unknown" });
-                    } catch (e) {
-                      alert("Google login failed");
-                    }
-                  }}
-                  onError={() => alert("Google login failed")}
-                />
+                <div className="oauth">
+                  <GoogleLogin
+                    onSuccess={(cred) => {
+                      try {
+                        loginWithGoogle(cred);
+                        // user state updates via context; read from localStorage for role
+                        const stored = localStorage.getItem("user");
+                        const parsed = stored ? JSON.parse(stored) : null;
+                        afterAuthRedirect(parsed || { role: localStorage.getItem("role") || "unknown" });
+                      } catch (e) {
+                        alert("Google login failed");
+                      }
+                    }}
+                    onError={() => alert("Google login failed")}
+                  />
+                </div>
               </div>
             )}
           </>

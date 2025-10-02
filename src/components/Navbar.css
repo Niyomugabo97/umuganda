@@ -73,6 +73,12 @@
   font-size: 14px;
 }
 
+/* Center OAuth area (e.g., Google login) inside dropdown */
+.oauth {
+  display: flex;
+  justify-content: center;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
   .hamburger {
