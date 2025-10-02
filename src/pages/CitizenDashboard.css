@@ -145,3 +145,30 @@ table tbody tr:hover {
     white-space: nowrap;
   }
 }
+
+/* Print-specific rules: hide actions/controls when printing */
+@media print {
+  /* Hide obvious UI controls */
+  .search-box,
+  .logout-btn {
+    display: none !important;
+  }
+
+  /* Hide any button elements by default (covers remove/edit/delete) */
+  button {
+    display: none !important;
+  }
+
+  /* Hide common action containers or specifically named action buttons */
+  .actions,
+  .action,
+  .action-buttons,
+  .edit,
+  .edit-btn,
+  .delete,
+  .delete-btn,
+  .remove,
+  .remove-btn {
+    display: none !important;
+  }
+}
