@@ -1,0 +1,58 @@
+/* Home.css */
+.home-container {
+  padding: 100px 40px;
+  font-family: sans-serif;
+  max-width: 800px;
+  margin: auto;
+}
+
+.features {
+  padding: 20px 0;
+  list-style: none;
+}
+
+.primary-button {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+}
+
+.activity-container {
+  margin-top: 60px;
+}
+
+.activity-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.activity-item {
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.activity-image {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 600px) {
+  .home-container {
+    padding: 80px 16px;
+  }
+
+  .primary-button {
+    width: 100%;
+    text-align: center;
+  }
+}

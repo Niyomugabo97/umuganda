@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { useState } from "react";
+import "./Signup.css";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ export default function Signup() {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "50px auto" }}>
+    <div className="signup-container">
       <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
         <input
@@ -47,7 +48,7 @@ export default function Signup() {
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-        /><br /><br />
+        />
         <input
           type="email"
           name="email"
@@ -55,7 +56,7 @@ export default function Signup() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-        /><br /><br />
+        />
         <input
           type="password"
           name="password"
@@ -63,7 +64,7 @@ export default function Signup() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-        /><br /><br />
+        />
         <button type="submit">Signup</button>
       </form>
       <p>
