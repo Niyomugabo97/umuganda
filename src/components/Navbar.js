@@ -66,21 +66,7 @@ export default function Navbar() {
           <>
             <button onClick={() => setAuthOpen((v) => !v)}>Sign In</button>
             {authOpen && (
-              <div
-                style={{
-                  position: "absolute",
-                  right: 0,
-                  top: "48px",
-                  background: "#fff",
-                  color: "#333",
-                  border: "1px solid #e1e4e8",
-                  borderRadius: 8,
-                  padding: 12,
-                  width: 300,
-                  boxShadow: "0 6px 18px rgba(0,0,0,.12)",
-                  zIndex: 1000,
-                }}
-              >
+              <div className="auth-panel">
                 <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
                   <button
                     onClick={() => setMode("login")}

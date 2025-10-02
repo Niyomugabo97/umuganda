@@ -79,6 +79,21 @@
   justify-content: center;
 }
 
+/* Auth dropdown panel */
+.auth-panel {
+  position: absolute;
+  right: 0;
+  top: 55px;
+  background: #fff;
+  color: #333;
+  border: 1px solid #e1e4e8;
+  border-radius: 8px;
+  padding: 12px;
+  width: 300px;
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  z-index: 1000;
+}
+
 /* Mobile responsive styles */
 @media (max-width: 768px) {
   .hamburger {
@@ -119,5 +134,18 @@
     margin: 15px 20px 0 20px;
     font-size: 16px;
     font-weight: 600;
+  }
+
+  /* Make auth panel fully visible and centered on small screens */
+  .auth-panel {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 24px);
+    max-width: 420px;
+    max-height: 70vh;
+    overflow-y: auto;
+    z-index: 1200;
   }
 }
