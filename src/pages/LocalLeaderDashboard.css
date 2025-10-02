@@ -22,6 +22,7 @@ h2, h3 {
   padding: 1rem;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dbe2ea; /* add clear border around each form */
 }
 
 .form-grid {
@@ -36,6 +37,29 @@ h2, h3 {
   padding: 0.5rem;
   border-radius: 5px;
   border: 1px solid #ccc;
+}
+
+/* Improve input/select spacing and responsiveness */
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  margin: 4px 0;
+}
+
+/* Primary buttons (match site blue) */
+.form-grid button,
+.table-section > button {
+  background-color: #0056b3;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.form-grid button:hover,
+.table-section > button:hover {
+  background-color: #003d7a;
 }
 
 .table-section {
@@ -75,6 +99,25 @@ h2, h3 {
 
 .attendance-table td button:hover {
   background-color: #ddd;
+}
+
+/* Action buttons colors */
+.attendance-table .edit-btn {
+  background-color: #0056b3;
+  color: #fff;
+}
+
+.attendance-table .edit-btn:hover {
+  background-color: #003d7a;
+}
+
+.attendance-table .delete-btn {
+  background-color: #d9534f;
+  color: #fff;
+}
+
+.attendance-table .delete-btn:hover {
+  background-color: #c9302c;
 }
 
 
