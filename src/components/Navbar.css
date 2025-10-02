@@ -24,6 +24,7 @@
   font-weight: bold;
   cursor: default;
   flex-shrink: 0;
+  order: 1;
 }
 
 .link {
@@ -38,7 +39,8 @@
   cursor: pointer;
   display: none;
   user-select: none;
-  margin-left: auto; /* push it to the right */
+  /* place at far left */
+  order: 0;
 }
 
 /* Navigation links container */
@@ -48,6 +50,7 @@
   gap: 20px;
   transition: max-height 0.3s ease-in-out;
   margin-left: auto;
+  order: 2;
 }
 
 .nav-links a {
@@ -79,7 +82,7 @@
   .nav-links {
     position: absolute;
     top: 55px;
-    right: 0;
+    left: 0;
     background-color: #0056b3;
     flex-direction: column;
     width: 100%;
