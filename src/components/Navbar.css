@@ -2,9 +2,10 @@
 .navbar {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align everything to the left */
-  gap:30px; /* Space between logo and nav */
-  background-color: #0056b3;
+  justify-content: flex-start;
+  gap: 30px;
+  /* Linear gradient with Rwanda flag colors: blue, yellow, green */
+  background: linear-gradient(90deg, #00a1de, #fcd116, #007a3d);
   padding: 10px 20px;
   color: white;
   font-family: Arial, sans-serif;
@@ -12,11 +13,10 @@
   top: 0;
   width: 100%;
   z-index: 1000;
-  padding-left: 20px; /* remove negative margins and extra padding */
-  
-
-  
+  padding-left: 20px;
 }
+
+
 
 /* Logo */
 .logo {
