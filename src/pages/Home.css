@@ -1,171 +1,173 @@
-/* ===========================
-   HOME PAGE BASE
-=========================== */
-.home-container {
-  padding: 100px 40px;
-  font-family: sans-serif;
-  max-width: 900px;
-  margin: auto;
-  text-align: center;
+/* Home.css */
+
+/* === General Styles === */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
 }
 
-/* ===========================
-   LANDING CAROUSEL
-=========================== */
-.carousel-container {
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* === Landing Section === */
+.landing-section {
   position: relative;
   width: 100%;
   height: 70vh;
   overflow: hidden;
-  border-radius: 15px;
-  margin-bottom: 60px;
+  border-radius: 10px;
+  margin-bottom: 40px;
 }
 
-.slide {
-  position: absolute;
+.landing-image {
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-  opacity: 0;
-  background-size: cover;
-  background-position: center;
-  transition: opacity 1.5s ease-in-out;
+  object-fit: cover;
+  filter: brightness(0.7);
 }
 
-.slide.active {
-  opacity: 1;
-  z-index: 2;
-}
-
-.overlay-text {
+.overlay {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white;
-  text-align: center;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 25px 30px;
-  border-radius: 10px;
-  max-width: 85%;
-}
-
-.overlay-text h1 {
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-}
-
-.overlay-text p {
-  font-size: 1.2rem;
-  margin-bottom: 15px;
-  line-height: 1.5;
-}
-
-/* ===========================
-   BUTTON STYLES
-=========================== */
-.primary-button {
-  margin-top: 10px;
-  display: inline-block;
-  padding: 10px 20px;
-  background-color: #007bff;
   color: #fff;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.overlay h1 {
+  font-size: 3rem;
+  margin-bottom: 15px;
+}
+
+.overlay p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+.primary-button {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 50px;
   text-decoration: none;
-  border-radius: 5px;
-  font-weight: 600;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  transition: 0.3s;
 }
 
 .primary-button:hover {
-  background-color: #0056b3;
+  background-color: #ff4757;
 }
 
-/* ===========================
-   FEATURES LIST
-=========================== */
+/* === Features Section === */
 .features {
-  padding: 20px 0;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 40px;
   list-style: none;
+  padding: 0;
 }
 
 .features li {
-  margin-bottom: 10px;
-  font-size: 1.1rem;
+  background-color: #fff;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 10px;
+  flex: 1 1 250px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.3s;
 }
 
-/* ===========================
-   ACTIVITY SECTIONS
-=========================== */
+.features li:hover {
+  transform: translateY(-5px);
+}
+
+/* === Activity Section === */
 .activity-container {
-  margin-top: 60px;
-  text-align: left;
+  margin-bottom: 50px;
 }
 
 .activity-container h2 {
-  text-align: center;
-  color: #007bff;
+  font-size: 2rem;
   margin-bottom: 20px;
+  color: #222;
 }
 
 .activity-list {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
 }
 
 .activity-item {
-  background-color: #f9f9f9;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
   margin-bottom: 20px;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.2s;
+}
+
+.activity-item:hover {
+  transform: translateY(-3px);
 }
 
 .activity-item h3 {
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.activity-item p {
-  margin: 4px 0;
-  color: #555;
+  margin-top: 0;
+  color: #ff6b6b;
 }
 
 .activity-image {
   width: 100%;
-  max-width: 300px;
-  border-radius: 8px;
-  margin-top: 10px;
+  max-width: 400px;
+  margin-top: 15px;
+  border-radius: 10px;
+  object-fit: cover;
 }
 
-/* ===========================
-   RESPONSIVE DESIGN
-=========================== */
-@media (max-width: 800px) {
-  .overlay-text h1 {
-    font-size: 2rem;
+/* === Responsive Styles === */
+@media (max-width: 768px) {
+  .overlay h1 {
+    font-size: 2.2rem;
   }
 
-  .overlay-text p {
+  .overlay p {
     font-size: 1rem;
   }
 
-  .home-container {
-    padding: 80px 20px;
+  .features {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .features li {
+    flex: 1 1 90%;
+  }
+
+  .activity-image {
+    max-width: 100%;
   }
 }
 
-@media (max-width: 600px) {
-  .home-container {
-    padding: 80px 16px;
+@media (max-width: 480px) {
+  .overlay h1 {
+    font-size: 1.8rem;
+  }
+
+  .overlay p {
+    font-size: 0.9rem;
   }
 
   .primary-button {
-    width: 100%;
-    text-align: center;
-  }
-
-  .carousel-container {
-    height: 50vh;
+    padding: 10px 20px;
+    font-size: 0.9rem;
   }
 }
